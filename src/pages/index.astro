@@ -1,0 +1,320 @@
+---
+import InfographicLayout from "../layouts/InfographicLayout.astro";
+import DesignAxisGrid from "../components/DesignAxisGrid.astro";
+import MemoryKindCard from "../components/MemoryKindCard.astro";
+import FormFactorBento from "../components/FormFactorBento.astro";
+import StackCompareGraphic from "../components/StackCompareGraphic.astro";
+import { ramKinds } from "../data/ramDesignSystem";
+
+const pageTitle = "RAM Atlas — memory species, form factors, and trade-offs";
+const pageDescription =
+	"An interactive-style infographic: DDR5, GDDR, LPDDR, HBM, ZAM, DIMMs, CAMM2, and CUDIMM—validated notes, design axes, and how they differ.";
+---
+
+<InfographicLayout title={pageTitle} description={pageDescription}>
+	<header class="hero section">
+		<div class="wrap hero-inner">
+			<div class="hero-copy">
+				<p class="kicker">Memory field guide</p>
+				<h1>RAM is not one thing—it is a zoo of contracts</h1>
+				<p class="lede hero-lede">
+					A structured atlas for the memory alphabet soup: what each RAM family optimizes for, how bandwidth and latency trade places, and why
+					form factors can change the rules even when the chips sound familiar.
+				</p>
+				<div class="pill-row" aria-label="Highlights">
+					<span class="pill"><strong>Validated</strong> against public specs & JEDEC naming</span>
+					<span class="pill"><strong>Design system</strong> seven comparison axes</span>
+					<span class="pill"><strong>Readable</strong> without a datasheet marathon</span>
+				</div>
+			</div>
+			<div class="hero-panel card" aria-label="Quick comparison">
+				<h2 class="panel-title">Throughput vs latency vs sockets</h2>
+				<ul class="compare">
+					<li>
+						<span class="dot ddr"></span>
+						<div>
+							<p class="c-name">DDR5 SDRAM</p>
+							<p class="c-note">Bandwidth & density generation; latency is not magically “very low.”</p>
+						</div>
+					</li>
+					<li>
+						<span class="dot gddr"></span>
+						<div>
+							<p class="c-name">GDDR (VRAM)</p>
+							<p class="c-note">Wide GPU-local pool; optimized for streaming, not PC DIMM latency profiles.</p>
+						</div>
+					</li>
+					<li>
+						<span class="dot lpddr"></span>
+						<div>
+							<p class="c-name">LPDDR + UMA</p>
+							<p class="c-note">Efficiency & wide SoC attachment; soldered, contention-aware, often no CPU↔GPU copy.</p>
+						</div>
+					</li>
+					<li>
+						<span class="dot hbm"></span>
+						<div>
+							<p class="c-name">HBM stacks</p>
+							<p class="c-note">TSV skyscrapers beside compute; TB/s class bandwidth ( e.g. ~4.8 TB/s H200 public spec ).</p>
+						</div>
+					</li>
+					<li>
+						<span class="dot zam"></span>
+						<div>
+							<p class="c-name">ZAM (roadmap)</p>
+							<p class="c-note">Non-vertical interconnect story; timelines and “512 GB/stack” are ambitions, not shelves.</p>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</header>
+
+	<nav class="nav-dock" aria-label="Page sections">
+		<div class="wrap nav-dock-inner">
+			<a href="#design-system">Axes</a>
+			<a href="#memory-kinds">Memory families</a>
+			<a href="#stacks">HBM vs ZAM</a>
+			<a href="#form-factors">Form factors</a>
+			<a href="#timeline">Roadmap</a>
+		</div>
+	</nav>
+
+	<DesignAxisGrid />
+
+	<section class="section" id="memory-kinds" aria-labelledby="memory-kinds-title">
+		<div class="wrap">
+			<div class="section-head">
+				<p class="kicker">Memory families</p>
+				<h2 id="memory-kinds-title">Cards with fact checks and “trait radar” shapes</h2>
+				<p class="lede">
+					Each radar is a qualitative fingerprint ( 1–4 scale ) on the seven axes—use it to see similarity at a glance, not to rank absolute
+					performance without workload context.
+				</p>
+			</div>
+			<div class="mem-grid">
+				{ramKinds.map((kind) => <MemoryKindCard kind={kind} />)}
+			</div>
+		</div>
+	</section>
+
+	<section class="section" id="stacks" aria-labelledby="stacks-title">
+		<div class="wrap">
+			<div class="section-head">
+				<p class="kicker">Packaging physics</p>
+				<h2 id="stacks-title">Why HBM is a sandwich—and why ZAM is news</h2>
+				<p class="lede">
+					TSV stacks buy width with manufacturing pain and thermals. ZAM, as publicly pitched, proposes a different routing philosophy; keep a
+					healthy skepticism until third parties replicate benchmarks.
+				</p>
+			</div>
+			<div class="card stack-intro">
+				<p>
+					<strong>HBM reality today:</strong> shipping accelerators quote aggregate memory bandwidth in terabytes per second. For example, NVIDIA
+					publicly lists the H200 SXM variant around <strong>4.8 TB/s</strong> of HBM3e—same order of magnitude as common “4800–6000 GB/s” comparisons,
+					expressed in clearer units.
+				</p>
+				<p>
+					<strong>ZAM positioning:</strong> Intel and SoftBank’s SAIMEMORY effort advertises a diagonal / Z-axis routing story and long-range capacity
+					goals. Public commentary often cites <strong>2027</strong> class bring-up and <strong>2029</strong> class commercialization targets—roadmaps
+					slip; treat dates as compass headings, not appointments.
+				</p>
+			</div>
+			<StackCompareGraphic />
+		</div>
+	</section>
+
+	<FormFactorBento />
+
+	<section class="section" id="timeline" aria-labelledby="timeline-title">
+		<div class="wrap">
+			<div class="section-head">
+				<p class="kicker">When things land</p>
+				<h2 id="timeline-title">Notional roadmap ( verify before buying silicon )</h2>
+				<p class="lede">Vendor slides age quickly; this strip separates shipping memory from roadmap claims repeated in 2026 press coverage.</p>
+			</div>
+			<ol class="timeline">
+				<li>
+					<p class="t-date">Now</p>
+					<p class="t-title">DDR5 + GDDR6/7 + HBM3e</p>
+					<p class="t-body">Shipping at scale: PC SDRAM, GPU VRAM, AI accelerators.</p>
+				</li>
+				<li>
+					<p class="t-date">Rolling</p>
+					<p class="t-title">LPCAMM2 & CUDIMM ecosystems</p>
+					<p class="t-body">Laptops and high-speed DDR5 client platforms adopt new module rules for signal integrity.</p>
+				</li>
+				<li>
+					<p class="t-date">~2027 (claimed)</p>
+					<p class="t-title">ZAM prototypes / ES</p>
+					<p class="t-body">Lab visibility and partner bring-up; expect renamed milestones.</p>
+				</li>
+				<li>
+					<p class="t-date">~2029 (claimed)</p>
+					<p class="t-title">ZAM production intent</p>
+					<p class="t-body">If yields work, hyperscalers get a second sourcing story beside classic HBM vendors.</p>
+				</li>
+			</ol>
+		</div>
+	</section>
+
+	<footer class="footer">
+		<div class="wrap">
+			<p>
+				Educational RAM atlas. Numbers cite public product briefs where noted; always cross-check before thermal or financial decisions.
+			</p>
+		</div>
+	</footer>
+</InfographicLayout>
+
+<style>
+	.hero {
+		padding-top: clamp(2.5rem, 5vw, 4rem);
+	}
+
+	.hero-inner {
+		display: grid;
+		gap: 1.75rem;
+		align-items: start;
+	}
+
+	@media (min-width: 960px) {
+		.hero-inner {
+			grid-template-columns: 1.1fr 0.9fr;
+			gap: 2rem;
+		}
+	}
+
+	.hero-lede {
+		max-width: 58ch;
+	}
+
+	.hero-panel {
+		margin: 0;
+	}
+
+	.panel-title {
+		margin: 0 0 1rem;
+		font-size: 1.05rem;
+		font-family: var(--font-display);
+	}
+
+	.compare {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 0.85rem;
+	}
+
+	.compare li {
+		display: grid;
+		grid-template-columns: auto 1fr;
+		gap: 0.65rem;
+		align-items: start;
+	}
+
+	.dot {
+		width: 0.65rem;
+		height: 0.65rem;
+		border-radius: 50%;
+		margin-top: 0.35rem;
+		box-shadow: 0 0 16px color-mix(in oklab, currentColor 55%, transparent);
+	}
+
+	.dot.ddr {
+		background: #5eead4;
+		color: #5eead4;
+	}
+	.dot.gddr {
+		background: #a78bfa;
+		color: #a78bfa;
+	}
+	.dot.lpddr {
+		background: #fb923c;
+		color: #fb923c;
+	}
+	.dot.hbm {
+		background: #f472b6;
+		color: #f472b6;
+	}
+	.dot.zam {
+		background: #38bdf8;
+		color: #38bdf8;
+	}
+
+	.c-name {
+		margin: 0;
+		font-weight: 700;
+		font-size: 0.92rem;
+	}
+
+	.c-note {
+		margin: 0.15rem 0 0;
+		font-size: 0.86rem;
+		color: var(--muted);
+	}
+
+	.mem-grid {
+		display: grid;
+		gap: 1.25rem;
+	}
+
+	.stack-intro {
+		margin-bottom: 0.25rem;
+	}
+
+	.stack-intro p {
+		margin: 0 0 0.75rem;
+		color: #cbd5e1;
+		font-size: 0.95rem;
+	}
+
+	.stack-intro p:last-child {
+		margin-bottom: 0;
+	}
+
+	.timeline {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 0.75rem;
+	}
+
+	@media (min-width: 900px) {
+		.timeline {
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+		}
+	}
+
+	.timeline li {
+		border-radius: var(--radius-md);
+		border: 1px solid rgba(148, 163, 184, 0.16);
+		background: rgba(15, 23, 42, 0.55);
+		padding: 1rem 1rem 1.05rem;
+		min-height: 100%;
+	}
+
+	.t-date {
+		margin: 0;
+		font-size: 0.72rem;
+		font-weight: 800;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--accent);
+		font-family: var(--font-display);
+	}
+
+	.t-title {
+		margin: 0.35rem 0 0.35rem;
+		font-weight: 700;
+		font-size: 0.98rem;
+	}
+
+	.t-body {
+		margin: 0;
+		font-size: 0.86rem;
+		color: var(--muted);
+	}
+</style>

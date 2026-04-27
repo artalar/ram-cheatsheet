@@ -1,0 +1,125 @@
+---
+---
+
+<div class="graphic" aria-hidden="true">
+	<div class="lane hbm">
+		<p class="label">HBM-style TSV stack</p>
+		<div class="stack">
+			<span class="die"></span>
+			<span class="die"></span>
+			<span class="die"></span>
+			<span class="die"></span>
+		</div>
+		<div class="vias">
+			<span></span><span></span><span></span><span></span><span></span>
+		</div>
+		<p class="caption">Vertical vias join dies; extremely wide, hot, costly.</p>
+	</div>
+	<div class="lane zam">
+		<p class="label">ZAM-style diagonal story (concept)</p>
+		<div class="stack skew">
+			<span class="die"></span>
+			<span class="die"></span>
+			<span class="die"></span>
+			<span class="die"></span>
+		</div>
+		<div class="slant"></div>
+		<p class="caption">Vendor claims emphasize thermals & new interconnect physics—verify on silicon, not slides.</p>
+	</div>
+</div>
+
+<style>
+	.graphic {
+		display: grid;
+		gap: 1rem;
+		margin-top: 1.25rem;
+	}
+
+	@media (min-width: 800px) {
+		.graphic {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	.lane {
+		border-radius: var(--radius-md);
+		padding: 1rem 1rem 1.1rem;
+		background: rgba(2, 6, 23, 0.55);
+		border: 1px solid rgba(148, 163, 184, 0.16);
+		position: relative;
+		overflow: hidden;
+	}
+
+	.label {
+		margin: 0 0 0.65rem;
+		font-weight: 700;
+		font-size: 0.85rem;
+		color: #e2e8f0;
+	}
+
+	.stack {
+		display: grid;
+		gap: 0.35rem;
+		position: relative;
+		z-index: 1;
+	}
+
+	.stack.skew {
+		transform: skewX(-6deg);
+		transform-origin: left center;
+	}
+
+	.die {
+		height: 0.85rem;
+		border-radius: 0.35rem;
+		background: linear-gradient(90deg, rgba(148, 163, 184, 0.35), rgba(94, 234, 212, 0.45));
+		border: 1px solid rgba(148, 163, 184, 0.35);
+	}
+
+	.hbm .die {
+		background: linear-gradient(90deg, rgba(244, 114, 182, 0.35), rgba(167, 139, 250, 0.55));
+	}
+
+	.zam .die {
+		background: linear-gradient(90deg, rgba(56, 189, 248, 0.35), rgba(34, 211, 238, 0.55));
+	}
+
+	.vias {
+		position: absolute;
+		inset: auto 1.25rem 2.5rem 1.25rem;
+		top: 3.1rem;
+		display: flex;
+		justify-content: space-between;
+		opacity: 0.55;
+		pointer-events: none;
+	}
+
+	.vias span {
+		width: 0.35rem;
+		align-self: stretch;
+		min-height: 3.4rem;
+		border-radius: 999px;
+		background: linear-gradient(180deg, #fbbf24, #f97316);
+		box-shadow: 0 0 18px rgba(251, 191, 36, 0.35);
+	}
+
+	.slant {
+		position: absolute;
+		width: 140%;
+		height: 0.35rem;
+		background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.55), transparent);
+		transform: rotate(-32deg);
+		left: -10%;
+		top: 58%;
+		opacity: 0.65;
+		filter: blur(0.5px);
+	}
+
+	.caption {
+		margin: 0.85rem 0 0;
+		font-size: 0.82rem;
+		color: var(--muted);
+		position: relative;
+		z-index: 1;
+	}
+</style>

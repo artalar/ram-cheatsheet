@@ -1,0 +1,139 @@
+---
+import { formFactors } from "../data/formFactors";
+---
+
+<section class="section" id="form-factors" aria-labelledby="form-factors-title">
+	<div class="wrap">
+		<div class="section-head">
+			<p class="kicker">Form factors & modules</p>
+			<h2 id="form-factors-title">Same DRAM letters, different physical contracts</h2>
+			<p class="lede">
+				A “DDR5 laptop” might mean SO-DIMM, soldered LPDDR, CAMM2, or LPCAMM2. The chips are related; the socket, power rails, and width are not
+				interchangeable without a motherboard designed for that path.
+			</p>
+		</div>
+		<div class="bento">
+			{
+				formFactors.map((ff) => (
+					<article class="ff-card">
+						<div class="ff-top">
+							<h3>{ff.name}</h3>
+							<p class="ff-exp">{ff.expansion}</p>
+						</div>
+						<p class="ff-one">{ff.oneLiner}</p>
+						<div class="tags">
+							{ff.tags.map((tag) => (
+								<span class="tag">{tag}</span>
+							))}
+						</div>
+						<div class="cols">
+							<div>
+								<p class="mini-title">Validated notes</p>
+								<ul class="note-list tight">
+									{ff.validatedNotes.map((n) => (
+										<li>{n}</li>
+									))}
+								</ul>
+							</div>
+							<div>
+								<p class="mini-title">Extensions</p>
+								<ul class="ext-list tight">
+									{ff.extensions.map((e) => (
+										<li>{e}</li>
+									))}
+								</ul>
+							</div>
+						</div>
+					</article>
+				))
+			}
+		</div>
+	</div>
+</section>
+
+<style>
+	.bento {
+		display: grid;
+		gap: 1rem;
+	}
+
+	@media (min-width: 900px) {
+		.bento {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	.ff-card {
+		--chip: #22d3ee;
+		border-radius: var(--radius-lg);
+		padding: 1.2rem 1.25rem 1.3rem;
+		background: rgba(15, 23, 42, 0.72);
+		border: 1px solid rgba(148, 163, 184, 0.16);
+		display: grid;
+		gap: 0.65rem;
+	}
+
+	.ff-top h3 {
+		margin: 0;
+		font-size: 1.2rem;
+	}
+
+	.ff-exp {
+		margin: 0.15rem 0 0;
+		font-size: 0.85rem;
+		color: var(--muted);
+	}
+
+	.ff-one {
+		margin: 0;
+		color: #cbd5e1;
+		font-size: 0.95rem;
+	}
+
+	.tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.35rem;
+	}
+
+	.tag {
+		font-size: 0.72rem;
+		padding: 0.2rem 0.5rem;
+		border-radius: 999px;
+		border: 1px solid rgba(148, 163, 184, 0.22);
+		color: #cbd5e1;
+	}
+
+	.cols {
+		display: grid;
+		gap: 0.75rem;
+	}
+
+	@media (min-width: 640px) {
+		.cols {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	.mini-title {
+		margin: 0 0 0.35rem;
+		font-size: 0.72rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		color: #94a3b8;
+	}
+
+	.note-list.tight,
+	.ext-list.tight {
+		margin-top: 0.25rem;
+	}
+
+	.note-list.tight {
+		font-size: 0.85rem;
+	}
+
+	.ext-list.tight {
+		font-size: 0.82rem;
+	}
+</style>
