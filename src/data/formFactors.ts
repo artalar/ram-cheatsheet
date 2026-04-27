@@ -72,7 +72,7 @@ export const formFactors: FormFactor[] = [
 		expansion: "Compression Attached Memory Module 2 ( DDR5 SDRAM )",
 		oneLiner: "DDR5 SDRAM on the CAMM2 connector—still DDR5 electricals, new module outline for thin systems ( not the same thing as LPCAMM2’s LPDDR silicon ).",
 		validatedNotes: [
-			"Correction vs the original post: CAMM2 is a JEDEC module family; ASUS helped popularize early demos, but it is not an ASUS-only fantasy.",
+			"CAMM2 is a JEDEC module family; ASUS helped popularize early demos, but the form factor is not ASUS-only.",
 			"DDR5 CAMM2 and LPCAMM2 share connector lineage but use different DRAM types ( DDR5 vs LPDDR5X ).",
 		],
 		extensions: [

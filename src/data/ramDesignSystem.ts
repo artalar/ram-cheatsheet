@@ -118,7 +118,7 @@ export const ramKinds: RamKind[] = [
 			"DDR5 is the dominant JEDEC SDRAM generation for desktops and laptops in 2026. It raises per-module capacity and bandwidth with features like on-module power management and split sub-channels.",
 		validatedNotes: [
 			"Correct: DDR5 is the current mainstream SDRAM generation for new PCs.",
-			"Correction vs the original post: DDR5 is not characterized by “very low latency.” CAS latency numbers are typically higher than DDR4, while absolute latency in nanoseconds is often similar because clocks are faster.",
+			"Nuance: DDR5 is not characterized by “very low latency.” CAS latency numbers are typically higher than DDR4, while absolute latency in nanoseconds is often similar because clocks are faster.",
 			"DDR5’s headline wins are bandwidth, density, and architecture ( PMIC on DIMM, more banks ), not a latency revolution.",
 		],
 		extensions: [
