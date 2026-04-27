@@ -1,0 +1,103 @@
+---
+import { designAxes } from "../data/ramDesignSystem";
+---
+
+<section class="section" id="design-system" aria-labelledby="design-system-title">
+	<div class="wrap">
+		<div class="section-head">
+			<p class="kicker">Design system</p>
+			<h2 id="design-system-title">Seven axes that separate memory “species”</h2>
+			<p class="lede">
+				Technology names ( DDR5, GDDR, HBM, LPDDR ) describe different DRAM families and packages. These axes explain how engineers trade
+				bandwidth, latency, power, and cost—without drowning in acronyms.
+			</p>
+		</div>
+		<div class="axis-grid">
+			{
+				designAxes.map((axis, index) => (
+					<div class="axis-card">
+						<p class="axis-index">{String(index + 1).padStart(2, "0")}</p>
+						<h3>{axis.label}</h3>
+						<p class="axis-desc">{axis.description}</p>
+						<div class="axis-range">
+							<span>{axis.lowEndMeaning}</span>
+							<span class="arrow" aria-hidden="true">
+								↔
+							</span>
+							<span>{axis.highEndMeaning}</span>
+						</div>
+					</div>
+				))
+			}
+		</div>
+	</div>
+</section>
+
+<style>
+	.axis-grid {
+		display: grid;
+		gap: 0.85rem;
+	}
+
+	@media (min-width: 720px) {
+		.axis-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (min-width: 1100px) {
+		.axis-grid {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+	}
+
+	.axis-card {
+		border-radius: var(--radius-md);
+		padding: 1.1rem 1.15rem;
+		background: rgba(15, 23, 42, 0.65);
+		border: 1px solid rgba(148, 163, 184, 0.16);
+		display: grid;
+		gap: 0.45rem;
+		min-height: 100%;
+	}
+
+	.axis-card h3 {
+		font-size: 1.05rem;
+	}
+
+	.axis-index {
+		margin: 0;
+		font-family: var(--font-display);
+		font-weight: 800;
+		font-size: 0.85rem;
+		letter-spacing: 0.08em;
+		color: var(--accent);
+	}
+
+	.axis-desc {
+		margin: 0;
+		color: var(--muted);
+		font-size: 0.92rem;
+	}
+
+	.axis-range {
+		margin-top: 0.35rem;
+		display: grid;
+		grid-template-columns: 1fr auto 1fr;
+		gap: 0.35rem;
+		align-items: center;
+		font-size: 0.78rem;
+		color: #cbd5e1;
+	}
+
+	.axis-range span:first-child,
+	.axis-range span:last-child {
+		line-height: 1.35;
+	}
+
+	.arrow {
+		text-align: center;
+		color: var(--accent);
+		font-size: 1rem;
+	}
+</style>

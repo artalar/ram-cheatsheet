@@ -1,0 +1,144 @@
+---
+import type { RamKind } from "../data/ramDesignSystem";
+import MemoryRadar from "./MemoryRadar.astro";
+
+interface Props {
+	kind: RamKind;
+}
+
+const { kind } = Astro.props;
+const categoryLabel: Record<RamKind["category"], string> = {
+	system: "System SDRAM",
+	graphics: "Graphics memory",
+	mobile: "Mobile / SoC",
+	datacenter: "AI & HPC",
+	roadmap: "Roadmap",
+};
+---
+
+<article class="mem-card" id={kind.slug} style={`--chip:${kind.color};--glow:${kind.glow}`}>
+	<header class="mem-head">
+		<div class="orb" aria-hidden="true"></div>
+		<div class="mem-titles">
+			<p class="category">{categoryLabel[kind.category]}</p>
+			<h3>{kind.acronym}</h3>
+			<p class="full">{kind.fullName}</p>
+			<p class="tagline">{kind.tagline}</p>
+		</div>
+	</header>
+	<p class="summary">{kind.summary}</p>
+	<div class="split">
+		<div>
+			<p class="block-title">Fact check & nuance</p>
+			<ul class="note-list">
+				{kind.validatedNotes.map((note) => <li>{note}</li>)}
+			</ul>
+		</div>
+		<div>
+			<p class="block-title">Go deeper</p>
+			<ul class="ext-list">
+				{kind.extensions.map((item) => <li>{item}</li>)}
+			</ul>
+			<div class="radar-wrap">
+				<MemoryRadar kind={kind} size={176} />
+			</div>
+		</div>
+	</div>
+</article>
+
+<style>
+	.mem-card {
+		--chip: #5eead4;
+		--glow: rgba(94, 234, 212, 0.35);
+		border-radius: var(--radius-lg);
+		padding: 1.35rem 1.4rem 1.45rem;
+		background: linear-gradient(
+				135deg,
+				color-mix(in oklab, var(--chip) 14%, rgba(15, 23, 42, 0.92)),
+				rgba(15, 23, 42, 0.88)
+			),
+			rgba(2, 6, 23, 0.55);
+		border: 1px solid color-mix(in oklab, var(--chip) 35%, rgba(148, 163, 184, 0.2));
+		box-shadow: 0 0 0 1px rgba(2, 6, 23, 0.55), 0 24px 60px rgba(2, 6, 23, 0.55), 0 0 50px var(--glow);
+		display: grid;
+		gap: 1rem;
+		scroll-margin-top: 5.5rem;
+	}
+
+	.mem-head {
+		display: grid;
+		grid-template-columns: auto 1fr;
+		gap: 1rem;
+		align-items: start;
+	}
+
+	.orb {
+		width: 3.25rem;
+		height: 3.25rem;
+		border-radius: 50%;
+		background: radial-gradient(circle at 30% 25%, #fff6, transparent 45%),
+			radial-gradient(circle at 50% 80%, color-mix(in oklab, var(--chip) 70%, #020617), #020617);
+		box-shadow: 0 0 0 2px color-mix(in oklab, var(--chip) 55%, transparent), 0 0 40px var(--glow);
+	}
+
+	.category {
+		margin: 0;
+		font-size: 0.75rem;
+		text-transform: uppercase;
+		letter-spacing: 0.12em;
+		color: color-mix(in oklab, var(--chip) 70%, var(--muted));
+		font-weight: 600;
+	}
+
+	.mem-titles h3 {
+		margin: 0.15rem 0 0;
+		font-size: 1.45rem;
+	}
+
+	.full {
+		margin: 0.2rem 0 0;
+		font-size: 0.85rem;
+		color: var(--muted);
+	}
+
+	.tagline {
+		margin: 0.45rem 0 0;
+		font-weight: 600;
+		color: #e2e8f0;
+	}
+
+	.summary {
+		margin: 0;
+		color: #cbd5e1;
+		font-size: 0.98rem;
+	}
+
+	.split {
+		display: grid;
+		gap: 1rem;
+	}
+
+	@media (min-width: 900px) {
+		.split {
+			grid-template-columns: 1.15fr 0.85fr;
+			align-items: start;
+		}
+	}
+
+	.block-title {
+		margin: 0 0 0.35rem;
+		font-size: 0.78rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		color: #cbd5e1;
+	}
+
+	.radar-wrap {
+		margin-top: 0.75rem;
+		padding: 0.65rem 0.75rem;
+		border-radius: var(--radius-md);
+		border: 1px solid rgba(148, 163, 184, 0.16);
+		background: rgba(2, 6, 23, 0.45);
+	}
+</style>
