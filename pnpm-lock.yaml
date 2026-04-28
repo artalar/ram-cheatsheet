@@ -11,6 +11,7 @@ importers:
       astro:
         specifier: ^6.1.10
         version: 6.1.10(rollup@4.60.2)(typescript@6.0.3)
+    devDependencies:
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
