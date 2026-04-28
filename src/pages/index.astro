@@ -1,0 +1,589 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroMural from '../components/HeroMural.astro';
+import AxisLegend from '../components/AxisLegend.astro';
+import RamCard from '../components/RamCard.astro';
+import ModuleCard from '../components/ModuleCard.astro';
+import SectionRibbon from '../components/SectionRibbon.astro';
+import ComparisonMatrix from '../components/ComparisonMatrix.astro';
+import Glossary from '../components/Glossary.astro';
+import {
+  dramStandards,
+  moduleStandards,
+  getStandardsByFamily,
+  type DramFamily,
+} from '../content/ram-types';
+
+const families: { key: DramFamily; label: string; description: string }[] = [
+  {
+    key: 'ddr',
+    label: 'DDR SDRAM',
+    description:
+      'Mainstream double-data-rate synchronous DRAM for PC, workstation, and server main memory. Successive generations increase transfer rates and density.',
+  },
+  {
+    key: 'lpddr',
+    label: 'LPDDR',
+    description:
+      'Low-power DDR family for battery-powered and dense designs. Appears soldered in phones and laptops, or modularized via LPCAMM2.',
+  },
+  {
+    key: 'gddr',
+    label: 'GDDR',
+    description:
+      'Graphics-optimized DRAM standards for GPU memory subsystems. Emphasizes high per-pin data rates and wide memory buses.',
+  },
+  {
+    key: 'hbm',
+    label: 'HBM',
+    description:
+      'Stacked high-bandwidth memory using through-silicon vias (TSVs). Designed for accelerator packaging where aggregate bandwidth is the headline goal.',
+  },
+];
+
+const familyOrder: DramFamily[] = ['ddr', 'lpddr', 'gddr', 'hbm'];
+---
+
+<BaseLayout title="RAM Cheatsheet — DRAM Standards & Module Form Factors">
+  <!-- ══════════════════════════════════════════════════════════════════════════ -->
+  <!-- HERO -->
+  <!-- ══════════════════════════════════════════════════════════════════════════ -->
+  <section class="hero section-band" aria-label="Introduction">
+    <div class="hero__mural">
+      <HeroMural />
+    </div>
+    <h1 class="hero__title text-balance">RAM Literacy</h1>
+    <p class="hero__subtitle text-pretty">
+      An authoritative, citation-backed taxonomy of DRAM standards and module form factors.
+      Definitions, roles, and standards — not benchmarks.
+    </p>
+    <div class="hero__cta">
+      <a href="/explore" class="hero__btn hero__btn--primary">
+        Explore the Matrix
+        <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 8h10M9 4l4 4-4 4" />
+        </svg>
+      </a>
+      <a href="#glossary" class="hero__btn hero__btn--secondary">
+        Glossary
+      </a>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════════════ -->
+  <!-- HOW TO READ THIS -->
+  <!-- ══════════════════════════════════════════════════════════════════════════ -->
+  <section class="section-band container flow" aria-labelledby="how-to-read-heading">
+    <SectionRibbon family="none" label="How to Read This Infographic" headingLevel={2} />
+    <div class="how-to-read__intro">
+      <p>
+        This site organizes the RAM landscape along <strong>four qualitative axes</strong>.
+        No numeric scores or benchmark ratios — just definitions, roles, and standards from
+        JEDEC specifications and vendor documentation.
+      </p>
+    </div>
+    <AxisLegend />
+  </section>
+
+  <hr class="divider container" />
+
+  <!-- ══════════════════════════════════════════════════════════════════════════ -->
+  <!-- COMPARISON MATRIX -->
+  <!-- ══════════════════════════════════════════════════════════════════════════ -->
+  <section class="section-band container flow" aria-labelledby="matrix-heading">
+    <SectionRibbon family="none" label="Comparison Matrix" headingLevel={2} />
+    <p>
+      Which DRAM families use which packaging types? Active cells are highlighted; dimmed cells
+      show the full picture stays visible like a printed reference legend.
+    </p>
+    <ComparisonMatrix />
+  </section>
+
+  <hr class="divider container" />
+
+  <!-- ══════════════════════════════════════════════════════════════════════════ -->
+  <!-- DRAM FAMILY SECTIONS -->
+  <!-- ══════════════════════════════════════════════════════════════════════════ -->
+  {familyOrder.map((familyInfo) => {
+    const info = families.find((f) => f.key === familyInfo)!;
+    const standards = getStandardsByFamily(familyInfo);
+    return (
+      <section
+        class:list={['section-band container flow', `section-band--${familyInfo}`]}
+        aria-labelledby={`section-${familyInfo}-heading`}
+      >
+        <SectionRibbon family={familyInfo} headingLevel={2}>
+          {info.label}
+        </SectionRibbon>
+        <p class="section-intro">{info.description}</p>
+        <div class="bento-grid">
+          {standards.map((std, i) => (
+            <div class="reveal" style={`--reveal-delay: ${i * 80}ms;`}>
+              <RamCard entry={std} index={i} />
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  })}
+
+  <hr class="divider container" />
+
+  <!-- ══════════════════════════════════════════════════════════════════════════ -->
+  <!-- MODULE FORM FACTORS -->
+  <!-- ══════════════════════════════════════════════════════════════════════════ -->
+  <section class="section-band container flow" aria-labelledby="modules-heading">
+    <SectionRibbon family="modules" label="Module Form Factors & Electrical Roles" headingLevel={2} />
+    <p>
+      DRAM chips are mounted on <strong>modules</strong> (DIMMs) or soldered directly.
+      The module's <strong>electrical role</strong> determines how signals travel between the
+      memory controller and DRAM chips — unbuffered, registered, clocked, or multiplexed.
+    </p>
+    <div class="bento-grid">
+      {moduleStandards.map((mod, i) => (
+        <div class="reveal" style={`--reveal-delay: ${i * 80}ms;`}>
+          <ModuleCard entry={mod} index={i} />
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <hr class="divider container" />
+
+  <!-- ══════════════════════════════════════════════════════════════════════════ -->
+  <!-- MEMORY PATH DIAGRAM (static SVG inline) -->
+  <!-- ══════════════════════════════════════════════════════════════════════════ -->
+  <section class="section-band container flow" aria-labelledby="memory-path-heading">
+    <SectionRibbon family="none" label="Memory Paths at a Glance" headingLevel={2} />
+    <p>
+      A simplified view of how different compute units connect to their memory subsystems.
+      No performance numbers on the arrows — just the <strong>design intent</strong>.
+    </p>
+    <div class="memory-path-diagram panel">
+      <svg
+        viewBox="0 0 800 240"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        class="memory-path-svg"
+        role="img"
+        aria-label="Simplified memory path diagram showing CPU connected to DDR DIMMs, GPU connected to GDDR chips, and an accelerator connected to HBM stacks via an interposer"
+      >
+        <!-- Background grid -->
+        <defs>
+          <pattern id="mp-grid" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+            <circle cx="10" cy="10" r="0.4" fill="rgba(148,163,184,0.1)" />
+          </pattern>
+        </defs>
+        <rect width="800" height="240" fill="url(#mp-grid)" rx="8" />
+
+        <!-- ── CPU → DDR ── -->
+        <rect x="40" y="60" width="80" height="60" rx="6" stroke="rgba(6,182,212,0.5)" stroke-width="1.5" fill="rgba(6,182,212,0.06)" />
+        <text x="80" y="95" text-anchor="middle" font-size="12" fill="rgba(6,182,212,0.8)" font-family="monospace" font-weight="600">CPU</text>
+
+        <!-- Bus lines -->
+        <line x1="120" y1="78" x2="220" y2="78" stroke="rgba(6,182,212,0.25)" stroke-width="1.2" />
+        <line x1="120" y1="90" x2="220" y2="90" stroke="rgba(6,182,212,0.25)" stroke-width="1.2" />
+        <line x1="120" y1="102" x2="220" y2="102" stroke="rgba(6,182,212,0.25)" stroke-width="1.2" />
+        <polygon points="216,76 222,78 216,80" fill="rgba(6,182,212,0.35)" />
+        <polygon points="216,88 222,90 216,92" fill="rgba(6,182,212,0.35)" />
+        <polygon points="216,100 222,102 216,104" fill="rgba(6,182,212,0.35)" />
+        <text x="170" y="72" text-anchor="middle" font-size="7" fill="rgba(6,182,212,0.4)" font-family="monospace" letter-spacing="0.08em">CHANNEL</text>
+
+        <!-- DIMM outline -->
+        <rect x="225" y="65" width="80" height="50" rx="3" stroke="rgba(6,182,212,0.4)" stroke-width="1.2" fill="rgba(6,182,212,0.04)" />
+        <rect x="232" y="72" width="10" height="14" rx="1" stroke="rgba(6,182,212,0.25)" stroke-width="0.8" fill="none" />
+        <rect x="247" y="72" width="10" height="14" rx="1" stroke="rgba(6,182,212,0.25)" stroke-width="0.8" fill="none" />
+        <rect x="262" y="72" width="10" height="14" rx="1" stroke="rgba(6,182,212,0.25)" stroke-width="0.8" fill="none" />
+        <rect x="277" y="72" width="10" height="14" rx="1" stroke="rgba(6,182,212,0.25)" stroke-width="0.8" fill="none" />
+        <text x="265" y="135" text-anchor="middle" font-size="10" fill="rgba(6,182,212,0.6)" font-family="monospace" font-weight="600" letter-spacing="0.04em">DDR5</text>
+        <text x="265" y="148" text-anchor="middle" font-size="7" fill="rgba(6,182,212,0.35)" font-family="monospace">UDIMM / RDIMM</text>
+
+        <!-- ── GPU → GDDR ── -->
+        <rect x="40" y="170" width="80" height="60" rx="6" stroke="rgba(245,158,11,0.5)" stroke-width="1.5" fill="rgba(245,158,11,0.06)" />
+        <text x="80" y="205" text-anchor="middle" font-size="12" fill="rgba(245,158,11,0.8)" font-family="monospace" font-weight="600">GPU</text>
+
+        <!-- Wide bus (multiple parallel lines) -->
+        <line x1="120" y1="180" x2="220" y2="180" stroke="rgba(245,158,11,0.2)" stroke-width="1" />
+        <line x1="120" y1="188" x2="220" y2="188" stroke="rgba(245,158,11,0.2)" stroke-width="1" />
+        <line x1="120" y1="196" x2="220" y2="196" stroke="rgba(245,158,11,0.2)" stroke-width="1" />
+        <line x1="120" y1="204" x2="220" y2="204" stroke="rgba(245,158,11,0.2)" stroke-width="1" />
+        <line x1="120" y1="212" x2="220" y2="212" stroke="rgba(245,158,11,0.2)" stroke-width="1" />
+        <line x1="120" y1="220" x2="220" y2="220" stroke="rgba(245,158,11,0.2)" stroke-width="1" />
+        <!-- Wide bus fill -->
+        <rect x="120" y="180" width="100" height="40" fill="rgba(245,158,11,0.02)" />
+        <text x="170" y="175" text-anchor="middle" font-size="7" fill="rgba(245,158,11,0.4)" font-family="monospace" letter-spacing="0.08em">WIDE BUS</text>
+
+        <!-- GDDR chips (soldered) -->
+        <rect x="225" y="172" width="30" height="24" rx="3" stroke="rgba(245,158,11,0.35)" stroke-width="1" fill="rgba(245,158,11,0.04)" />
+        <rect x="260" y="172" width="30" height="24" rx="3" stroke="rgba(245,158,11,0.35)" stroke-width="1" fill="rgba(245,158,11,0.04)" />
+        <rect x="295" y="172" width="30" height="24" rx="3" stroke="rgba(245,158,11,0.35)" stroke-width="1" fill="rgba(245,158,11,0.04)" />
+        <rect x="225" y="200" width="30" height="24" rx="3" stroke="rgba(245,158,11,0.35)" stroke-width="1" fill="rgba(245,158,11,0.04)" />
+        <rect x="260" y="200" width="30" height="24" rx="3" stroke="rgba(245,158,11,0.35)" stroke-width="1" fill="rgba(245,158,11,0.04)" />
+        <rect x="295" y="200" width="30" height="24" rx="3" stroke="rgba(245,158,11,0.35)" stroke-width="1" fill="rgba(245,158,11,0.04)" />
+        <text x="275" y="237" text-anchor="middle" font-size="10" fill="rgba(245,158,11,0.6)" font-family="monospace" font-weight="600" letter-spacing="0.04em">GDDR</text>
+
+        <!-- ── Accelerator → HBM ── -->
+        <rect x="480" y="70" width="100" height="70" rx="8" stroke="rgba(139,92,246,0.5)" stroke-width="1.5" fill="rgba(139,92,246,0.06)" />
+        <text x="530" y="110" text-anchor="middle" font-size="11" fill="rgba(139,92,246,0.8)" font-family="monospace" font-weight="600">ACCELERATOR</text>
+
+        <!-- On-package connection -->
+        <line x1="580" y1="90" x2="640" y2="90" stroke="rgba(139,92,246,0.3)" stroke-width="1.5" />
+        <line x1="580" y1="105" x2="640" y2="105" stroke="rgba(139,92,246,0.3)" stroke-width="1.5" />
+        <line x1="580" y1="120" x2="640" y2="120" stroke="rgba(139,92,246,0.3)" stroke-width="1.5" />
+        <text x="610" y="83" text-anchor="middle" font-size="7" fill="rgba(139,92,246,0.4)" font-family="monospace" letter-spacing="0.08em">ON-PKG</text>
+
+        <!-- Interposer -->
+        <rect x="645" y="55" width="130" height="100" rx="4" stroke="rgba(139,92,246,0.25)" stroke-width="1" fill="rgba(139,92,246,0.02)" stroke-dasharray="4 2" />
+        <text x="710" y="148" text-anchor="middle" font-size="7" fill="rgba(139,92,246,0.3)" font-family="monospace">INTERPOSER</text>
+
+        <!-- HBM Stack 1 -->
+        <rect x="660" y="62" width="28" height="75" rx="2" stroke="rgba(139,92,246,0.4)" stroke-width="1.2" fill="rgba(139,92,246,0.04)" />
+        <line x1="660" y1="77" x2="688" y2="77" stroke="rgba(139,92,246,0.2)" stroke-width="0.5" />
+        <line x1="660" y1="92" x2="688" y2="92" stroke="rgba(139,92,246,0.2)" stroke-width="0.5" />
+        <line x1="660" y1="107" x2="688" y2="107" stroke="rgba(139,92,246,0.2)" stroke-width="0.5" />
+        <line x1="660" y1="122" x2="688" y2="122" stroke="rgba(139,92,246,0.2)" stroke-width="0.5" />
+        <!-- TSV dots -->
+        <circle cx="670" cy="70" r="1" fill="rgba(139,92,246,0.3)" />
+        <circle cx="678" cy="70" r="1" fill="rgba(139,92,246,0.3)" />
+        <circle cx="670" cy="85" r="1" fill="rgba(139,92,246,0.25)" />
+        <circle cx="678" cy="85" r="1" fill="rgba(139,92,246,0.25)" />
+        <circle cx="670" cy="100" r="1" fill="rgba(139,92,246,0.2)" />
+        <circle cx="678" cy="100" r="1" fill="rgba(139,92,246,0.2)" />
+
+        <!-- HBM Stack 2 -->
+        <rect x="700" y="62" width="28" height="75" rx="2" stroke="rgba(139,92,246,0.4)" stroke-width="1.2" fill="rgba(139,92,246,0.04)" />
+        <line x1="700" y1="77" x2="728" y2="77" stroke="rgba(139,92,246,0.2)" stroke-width="0.5" />
+        <line x1="700" y1="92" x2="728" y2="92" stroke="rgba(139,92,246,0.2)" stroke-width="0.5" />
+        <line x1="700" y1="107" x2="728" y2="107" stroke="rgba(139,92,246,0.2)" stroke-width="0.5" />
+        <line x1="700" y1="122" x2="728" y2="122" stroke="rgba(139,92,246,0.2)" stroke-width="0.5" />
+
+        <!-- HBM Stack 3 -->
+        <rect x="740" y="62" width="28" height="75" rx="2" stroke="rgba(139,92,246,0.4)" stroke-width="1.2" fill="rgba(139,92,246,0.04)" />
+        <line x1="740" y1="77" x2="768" y2="77" stroke="rgba(139,92,246,0.2)" stroke-width="0.5" />
+        <line x1="740" y1="92" x2="768" y2="92" stroke="rgba(139,92,246,0.2)" stroke-width="0.5" />
+        <line x1="740" y1="107" x2="768" y2="107" stroke="rgba(139,92,246,0.2)" stroke-width="0.5" />
+        <line x1="740" y1="122" x2="768" y2="122" stroke="rgba(139,92,246,0.2)" stroke-width="0.5" />
+
+        <text x="714" y="168" text-anchor="middle" font-size="10" fill="rgba(139,92,246,0.6)" font-family="monospace" font-weight="600" letter-spacing="0.04em">HBM</text>
+        <text x="714" y="180" text-anchor="middle" font-size="7" fill="rgba(139,92,246,0.35)" font-family="monospace">STACKED + TSVs</text>
+
+        <!-- ── SoC → LPDDR ── -->
+        <rect x="420" y="180" width="100" height="50" rx="6" stroke="rgba(20,184,166,0.5)" stroke-width="1.5" fill="rgba(20,184,166,0.06)" />
+        <rect x="430" y="190" width="35" height="30" rx="2" stroke="rgba(20,184,166,0.25)" stroke-width="0.8" fill="none" />
+        <text x="448" y="210" text-anchor="middle" font-size="7" fill="rgba(20,184,166,0.5)" font-family="monospace">CPU</text>
+        <rect x="475" y="190" width="35" height="30" rx="2" stroke="rgba(20,184,166,0.25)" stroke-width="0.8" fill="none" />
+        <text x="493" y="210" text-anchor="middle" font-size="7" fill="rgba(20,184,166,0.5)" font-family="monospace">GPU</text>
+        <text x="470" y="240" text-anchor="middle" font-size="8" fill="rgba(20,184,166,0.6)" font-family="monospace" font-weight="600">SoC</text>
+
+        <!-- SoC → LPDDR -->
+        <line x1="520" y1="198" x2="590" y2="198" stroke="rgba(20,184,166,0.25)" stroke-width="1" />
+        <line x1="520" y1="210" x2="590" y2="210" stroke="rgba(20,184,166,0.25)" stroke-width="1" />
+
+        <!-- LPDDR (soldered) -->
+        <rect x="595" y="185" width="50" height="40" rx="3" stroke="rgba(20,184,166,0.35)" stroke-width="1" fill="rgba(20,184,166,0.04)" />
+        <circle cx="608" cy="198" r="3" fill="rgba(20,184,166,0.15)" stroke="rgba(20,184,166,0.25)" stroke-width="0.6" />
+        <circle cx="622" cy="198" r="3" fill="rgba(20,184,166,0.15)" stroke="rgba(20,184,166,0.25)" stroke-width="0.6" />
+        <circle cx="636" cy="198" r="3" fill="rgba(20,184,166,0.15)" stroke="rgba(20,184,166,0.25)" stroke-width="0.6" />
+        <circle cx="608" cy="212" r="3" fill="rgba(20,184,166,0.15)" stroke="rgba(20,184,166,0.25)" stroke-width="0.6" />
+        <circle cx="622" cy="212" r="3" fill="rgba(20,184,166,0.15)" stroke="rgba(20,184,166,0.25)" stroke-width="0.6" />
+        <circle cx="636" cy="212" r="3" fill="rgba(20,184,166,0.15)" stroke="rgba(20,184,166,0.25)" stroke-width="0.6" />
+        <text x="620" y="238" text-anchor="middle" font-size="10" fill="rgba(20,184,166,0.6)" font-family="monospace" font-weight="600" letter-spacing="0.04em">LPDDR</text>
+
+        <!-- Shared memory label -->
+        <rect x="515" y="188" width="76" height="34" rx="2" stroke="rgba(20,184,166,0.12)" stroke-width="0.6" stroke-dasharray="3 2" fill="none" />
+        <text x="553" y="184" text-anchor="middle" font-size="6" fill="rgba(20,184,166,0.3)" font-family="monospace" letter-spacing="0.08em">SHARED POOL</text>
+
+        <!-- Decorative: floating module outline bottom-right -->
+        <g opacity="0.04">
+          <rect x="700" y="190" width="80" height="24" rx="2" stroke="currentColor" stroke-width="1" />
+          <rect x="705" y="194" width="8" height="16" rx="1" stroke="currentColor" stroke-width="0.6" fill="none" />
+          <rect x="716" y="194" width="8" height="16" rx="1" stroke="currentColor" stroke-width="0.6" fill="none" />
+          <rect x="727" y="194" width="8" height="16" rx="1" stroke="currentColor" stroke-width="0.6" fill="none" />
+          <rect x="738" y="194" width="8" height="16" rx="1" stroke="currentColor" stroke-width="0.6" fill="none" />
+          <rect x="749" y="194" width="8" height="16" rx="1" stroke="currentColor" stroke-width="0.6" fill="none" />
+          <rect x="760" y="194" width="8" height="16" rx="1" stroke="currentColor" stroke-width="0.6" fill="none" />
+        </g>
+      </svg>
+    </div>
+  </section>
+
+  <hr class="divider container" />
+
+  <!-- ══════════════════════════════════════════════════════════════════════════ -->
+  <!-- GLOSSARY -->
+  <!-- ══════════════════════════════════════════════════════════════════════════ -->
+  <section class="section-band container flow" aria-labelledby="glossary-heading">
+    <h2 id="glossary-heading">Glossary</h2>
+    <p>
+      Every acronym and term used on this site, in one place. Each entry gives the
+      full name and a concise definition.
+    </p>
+    <Glossary />
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════════════ -->
+  <!-- CONTENT POLICY -->
+  <!-- ══════════════════════════════════════════════════════════════════════════ -->
+  <section class="section-band container flow" aria-labelledby="policy-heading">
+    <h2 id="policy-heading">Content Policy</h2>
+    <div class="policy-grid">
+      <div class="policy-card panel">
+        <h3 class="policy-card__title">
+          <svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="var(--teal-500)" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+            <circle cx="10" cy="10" r="8" />
+            <path d="M7 10l2 2 4-4" />
+          </svg>
+          We Include
+        </h3>
+        <ul class="policy-list">
+          <li>What each acronym <strong>stands for</strong> and <strong>where it is used</strong></li>
+          <li>DRAM <strong>standard vs module form factor</strong> distinctions</li>
+          <li>Architectural facts that are <strong>textbook-stable</strong></li>
+          <li>Named product examples with <strong>vendor specification</strong> citations</li>
+          <li>JEDEC standard references where publicly available</li>
+        </ul>
+      </div>
+      <div class="policy-card panel">
+        <h3 class="policy-card__title">
+          <svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="var(--amber-500)" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+            <circle cx="10" cy="10" r="8" />
+            <path d="M10 6v4M10 14h.01" />
+          </svg>
+          We Exclude
+        </h3>
+        <ul class="policy-list">
+          <li>Multiplicative bandwidth or latency claims (e.g. "×15 bandwidth")</li>
+          <li>Numeric latency ratios stated as universal rules</li>
+          <li>Roadmap or "coming soon" product timelines</li>
+          <li>Speculative naming (ZAM, DDR6-only-CUDIMM, HUDIMM)</li>
+          <li>Editorial or opinion-based technology commentary</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ─── Hero ──────────────────────────────────────────────────────────────────── */
+  .hero {
+    position: relative;
+    min-height: clamp(420px, 65vh, 720px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: var(--space-16) var(--gutter);
+    padding-top: var(--space-24);
+    overflow: hidden;
+  }
+
+  .hero__mural {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  .hero__title,
+  .hero__subtitle,
+  .hero__cta {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero__cta {
+    display: flex;
+    gap: var(--space-4);
+    margin-block-start: var(--space-8);
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .hero__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-6);
+    border-radius: 9999px;
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-decoration: none;
+    transition:
+      background var(--duration-fast) var(--ease-out-expo),
+      color var(--duration-fast) var(--ease-out-expo),
+      border-color var(--duration-fast) var(--ease-out-expo),
+      transform var(--duration-fast) var(--ease-out-expo);
+  }
+
+  .hero__btn--primary {
+    background: var(--cyan-500);
+    color: var(--ink-900);
+    border: 1px solid transparent;
+  }
+
+  .hero__btn--primary:hover {
+    background: var(--cyan-300);
+    color: var(--ink-900);
+    transform: translateY(-1px);
+  }
+
+  .hero__btn--secondary {
+    background: transparent;
+    color: var(--ink-200);
+    border: 1px solid var(--surface-stroke);
+  }
+
+  .hero__btn--secondary:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--ink-50);
+    border-color: var(--ink-400);
+  }
+
+  /* ─── How to read intro ────────────────────────────────────────────────────── */
+  .how-to-read__intro {
+    max-width: 65ch;
+  }
+
+  .how-to-read__intro p {
+    font-size: var(--text-lg);
+    color: var(--ink-100);
+    line-height: 1.7;
+  }
+
+  /* ─── Section intro ────────────────────────────────────────────────────────── */
+  .section-intro {
+    font-size: var(--text-lg);
+    color: var(--ink-200);
+    line-height: 1.7;
+    max-inline-size: 65ch;
+  }
+
+  /* ─── Family-specific section band accents ──────────────────────────────────── */
+  .section-band--ddr {
+    border-left: 3px solid rgba(6, 182, 212, 0.15);
+    padding-left: var(--space-6);
+  }
+
+  .section-band--lpddr {
+    border-left: 3px solid rgba(20, 184, 166, 0.15);
+    padding-left: var(--space-6);
+  }
+
+  .section-band--gddr {
+    border-left: 3px solid rgba(245, 158, 11, 0.15);
+    padding-left: var(--space-6);
+  }
+
+  .section-band--hbm {
+    border-left: 3px solid rgba(139, 92, 246, 0.15);
+    padding-left: var(--space-6);
+  }
+
+  /* ─── Memory path diagram ──────────────────────────────────────────────────── */
+  .memory-path-diagram {
+    padding: var(--space-4);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .memory-path-svg {
+    display: block;
+    width: 100%;
+    min-width: 600px;
+    height: auto;
+  }
+
+  /* ─── Policy grid ──────────────────────────────────────────────────────────── */
+  .policy-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+    gap: var(--space-6);
+  }
+
+  .policy-card__title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-lg);
+    margin-block-end: var(--space-4);
+  }
+
+  .policy-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .policy-list li {
+    position: relative;
+    padding-left: var(--space-5);
+    font-size: var(--text-sm);
+    color: var(--ink-200);
+    line-height: 1.6;
+  }
+
+  .policy-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ink-400);
+  }
+
+  /* ─── Responsive ───────────────────────────────────────────────────────────── */
+  @media (max-width: 768px) {
+    .hero {
+      min-height: clamp(350px, 50vh, 500px);
+      padding-top: var(--space-20);
+    }
+
+    .hero__cta {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .hero__btn {
+      width: 100%;
+      max-width: 260px;
+      justify-content: center;
+    }
+
+    .section-band--ddr,
+    .section-band--lpddr,
+    .section-band--gddr,
+    .section-band--hbm {
+      border-left-width: 2px;
+      padding-left: var(--space-4);
+    }
+  }
+
+  /* ─── Reveal animation for section entries ─────────────────────────────────── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(12px);
+    transition:
+      opacity var(--duration-slow) var(--ease-out-expo),
+      transform var(--duration-slow) var(--ease-out-expo);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+
+  .reveal.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+</style>

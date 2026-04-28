@@ -1,0 +1,368 @@
+---
+/**
+ * Glossary — acronym-first definitional cards covering all RAM terms
+ * referenced in the infographic. Each card pairs an acronym badge with
+ * a concise definition, styled consistently with the RamCard system.
+ */
+
+interface GlossaryEntry {
+  readonly acronym: string;
+  readonly fullName: string;
+  readonly definition: string;
+  readonly family?: 'ddr' | 'lpddr' | 'gddr' | 'hbm' | 'module';
+}
+
+const glossaryEntries: readonly GlossaryEntry[] = [
+  {
+    acronym: 'DDR',
+    fullName: 'Double Data Rate SDRAM',
+    family: 'ddr',
+    definition:
+      'The mainstream synchronous DRAM family that transfers data on both the rising and falling edges of the clock signal. Successive generations (DDR3, DDR4, DDR5…) increase transfer rates and density.',
+  },
+  {
+    acronym: 'DDR5',
+    fullName: 'DDR5 SDRAM',
+    family: 'ddr',
+    definition:
+      'Fifth generation of DDR SDRAM for mainstream PC, workstation, and server main memory. Carried on module-based UDIMM, SO-DIMM, RDIMM, and other form factors.',
+  },
+  {
+    acronym: 'GDDR',
+    fullName: 'Graphics Double Data Rate SGRAM',
+    family: 'gddr',
+    definition:
+      'Graphics-optimized DRAM standards designed for GPU memory subsystems. Emphasize high per-pin data rates and wide memory buses relative to typical PC DIMM channels.',
+  },
+  {
+    acronym: 'GDDR6',
+    fullName: 'GDDR6 SGRAM',
+    family: 'gddr',
+    definition:
+      'Current-generation graphics DRAM standard. Used in discrete GPU products with high per-pin throughput and wide bus interfaces.',
+  },
+  {
+    acronym: 'GDDR6X',
+    fullName: 'GDDR6X SGRAM',
+    family: 'gddr',
+    definition:
+      'Extended-performance GDDR variant using PAM4 signalling for higher per-pin throughput on select GPU products.',
+  },
+  {
+    acronym: 'GDDR7',
+    fullName: 'GDDR7 SGRAM',
+    family: 'gddr',
+    definition:
+      'Latest GDDR standard for GPU memory subsystems with further increased per-pin data rates, used on newest-generation discrete GPU products.',
+  },
+  {
+    acronym: 'LPDDR',
+    fullName: 'Low-Power Double Data Rate SDRAM',
+    family: 'lpddr',
+    definition:
+      'Low-power DDR family designed for battery-powered and dense designs. Typically soldered directly to the board. Used in phones, thin laptops, and embedded platforms.',
+  },
+  {
+    acronym: 'LPDDR5X',
+    fullName: 'LPDDR5X SDRAM',
+    family: 'lpddr',
+    definition:
+      'Low-power DDR for mobile and laptop platforms. LPCAMM2 modules offer an upgradeable alternative to soldered LPDDR.',
+  },
+  {
+    acronym: 'LPDDR6',
+    fullName: 'LPDDR6 SDRAM',
+    family: 'lpddr',
+    definition:
+      'Newest LPDDR generation. Appears in single-pool CPU+GPU memory designs on some SoCs as shared physical memory.',
+  },
+  {
+    acronym: 'HBM',
+    fullName: 'High Bandwidth Memory',
+    family: 'hbm',
+    definition:
+      'Stacked DRAM using through-silicon vias (TSVs). Bandwidth is the headline design goal. Used in accelerator packaging where aggregate bandwidth is critical.',
+  },
+  {
+    acronym: 'HBM2e',
+    fullName: 'HBM2e',
+    family: 'hbm',
+    definition:
+      'Extended HBM2 generation. Aggregate bandwidth figures per accelerator come from vendor specs for named chips.',
+  },
+  {
+    acronym: 'HBM3',
+    fullName: 'HBM3',
+    family: 'hbm',
+    definition:
+      'Third-generation HBM with improved density and bandwidth. Used in high-end AI and compute accelerators.',
+  },
+  {
+    acronym: 'HBM3E',
+    fullName: 'HBM3E',
+    family: 'hbm',
+    definition:
+      'Extended-performance HBM3 variant with higher per-pin data rates. Deployed on the latest accelerator products.',
+  },
+  {
+    acronym: 'TSV',
+    fullName: 'Through-Silicon Via',
+    definition:
+      'Vertical electrical connection passing completely through a silicon die. The interconnect technology that enables HBM\'s stacked DRAM layers to communicate.',
+  },
+  {
+    acronym: 'UDIMM',
+    fullName: 'Unbuffered DIMM',
+    family: 'module',
+    definition:
+      'Unbuffered DIMM — normal desktop-style modules. No register sits between the memory controller and DRAM for command/address lines (unlike RDIMM).',
+  },
+  {
+    acronym: 'SO-DIMM',
+    fullName: 'Small Outline DIMM',
+    family: 'module',
+    definition:
+      'Small-outline DIMM for laptops and small-form-factor systems. Electrically similar to full-size UDIMM but in a physically smaller package.',
+  },
+  {
+    acronym: 'RDIMM',
+    fullName: 'Registered DIMM',
+    family: 'module',
+    definition:
+      'Registered DIMM uses registering buffers on command/address paths so servers can populate many modules per channel while maintaining signal integrity.',
+  },
+  {
+    acronym: 'LRDIMM',
+    fullName: 'Load-Reduced DIMM',
+    family: 'module',
+    definition:
+      'Load-Reduced DIMM adds further buffering beyond RDIMM for very large memory capacities. Buffers both command/address and data lines to reduce electrical load.',
+  },
+  {
+    acronym: 'CUDIMM',
+    fullName: 'Clocked Unbuffered DIMM',
+    family: 'module',
+    definition:
+      'Clocked Unbuffered DIMM per JEDEC JESD323. Includes a client clock driver on the module to improve clock signal integrity at high DDR5 transfer rates.',
+  },
+  {
+    acronym: 'CSODIMM',
+    fullName: 'Clocked Small Outline DIMM',
+    family: 'module',
+    definition:
+      'Clocked SO-DIMM — the small-outline counterpart to CUDIMM under JESD323. Includes the same client clock driver in the SO-DIMM form factor.',
+  },
+  {
+    acronym: 'CAMM2',
+    fullName: 'Compression Attached Memory Module 2',
+    family: 'module',
+    definition:
+      'Compression Attached Memory Module family. Uses a pressure-mount connector instead of edge-finger insertion, enabling thinner laptop designs while supporting DDR5 DRAM.',
+  },
+  {
+    acronym: 'LPCAMM2',
+    fullName: 'Low-Power CAMM2',
+    family: 'module',
+    definition:
+      'Pairs LPDDR DRAM with CAMM2 module mechanics. Positioned as upgradeable vs soldered LPDDR. Vendor docs cite 128-bit interface width per module.',
+  },
+  {
+    acronym: 'MRDIMM',
+    fullName: 'Multiplexed Rank DIMM',
+    family: 'module',
+    definition:
+      'Multiplexed Rank DIMM — a server DDR5 module direction standardized under JEDEC. Achieves higher effective throughput per channel via multiplexed ranks and associated buffer chips.',
+  },
+  {
+    acronym: 'JEDEC',
+    fullName: 'Joint Electron Device Engineering Council',
+    definition:
+      'The global standards body that defines DRAM specifications (DDR, LPDDR, GDDR, HBM families) and module standards (JESD323 for CUDIMM, etc.).',
+  },
+  {
+    acronym: 'DIMM',
+    fullName: 'Dual In-Line Memory Module',
+    definition:
+      'A circuit board carrying DRAM chips with separate electrical contacts on each side. The standard module form factor for desktop and server memory.',
+  },
+  {
+    acronym: 'BGA',
+    fullName: 'Ball Grid Array',
+    definition:
+      'A surface-mount packaging technology where DRAM chips are soldered directly to a PCB using an array of solder balls. Common for LPDDR and GDDR.',
+  },
+  {
+    acronym: 'PAM4',
+    fullName: '4-level Pulse Amplitude Modulation',
+    definition:
+      'A signalling method that encodes two bits per symbol using four signal levels. Used by GDDR6X to increase per-pin throughput without proportionally increasing frequency.',
+  },
+  {
+    acronym: 'MT/s',
+    fullName: 'MegaTransfers per Second',
+    definition:
+      'The number of data transfer operations per second, measured in millions. DDR5-4800 transfers 4800 million times per second (since DDR transfers on both clock edges).',
+  },
+];
+
+const familyColors: Record<string, string> = {
+  ddr: 'var(--cyan-500)',
+  lpddr: 'var(--teal-500)',
+  gddr: 'var(--amber-500)',
+  hbm: 'var(--violet-500)',
+  module: 'var(--ink-200)',
+};
+---
+
+<section class="glossary" id="glossary" aria-label="Glossary of RAM terms">
+  <div class="glossary__list">
+    {glossaryEntries.map((entry) => (
+      <div class="glossary-item" role="article">
+        <div class="glossary-item__header">
+          <span
+            class:list={[
+              'glossary-item__acronym',
+              entry.family ? `glossary-item__acronym--${entry.family}` : '',
+            ]}
+            style={entry.family ? { '--accent': familyColors[entry.family] } : {}}
+          >
+            {entry.acronym}
+          </span>
+        </div>
+        <p class="glossary-item__full">{entry.fullName}</p>
+        <p class="glossary-item__def">{entry.definition}</p>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .glossary__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+    gap: var(--space-4);
+  }
+
+  .glossary-item {
+    padding: var(--space-4);
+    background: var(--surface);
+    border: 1px solid var(--surface-stroke);
+    border-radius: var(--radius-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    position: relative;
+    overflow: hidden;
+    transition:
+      background var(--duration-fast) var(--ease-out-expo),
+      border-color var(--duration-fast) var(--ease-out-expo);
+  }
+
+  .glossary-item:hover {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(148, 163, 184, 0.2);
+  }
+
+  .glossary-item__header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .glossary-item__acronym {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: var(--text-base);
+    color: var(--ink-50);
+    letter-spacing: 0.04em;
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--surface-stroke);
+    line-height: 1.2;
+  }
+
+  /* Family-specific acronym badge coloring */
+  .glossary-item__acronym--ddr {
+    color: var(--cyan-300);
+    background: rgba(6, 182, 212, 0.1);
+    border-color: rgba(6, 182, 212, 0.25);
+  }
+
+  .glossary-item__acronym--lpddr {
+    color: var(--teal-300);
+    background: rgba(20, 184, 166, 0.1);
+    border-color: rgba(20, 184, 166, 0.25);
+  }
+
+  .glossary-item__acronym--gddr {
+    color: var(--amber-300);
+    background: rgba(245, 158, 11, 0.1);
+    border-color: rgba(245, 158, 11, 0.25);
+  }
+
+  .glossary-item__acronym--hbm {
+    color: var(--violet-300);
+    background: rgba(139, 92, 246, 0.1);
+    border-color: rgba(139, 92, 246, 0.25);
+  }
+
+  .glossary-item__acronym--module {
+    color: var(--ink-100);
+    background: rgba(148, 163, 184, 0.08);
+    border-color: rgba(148, 163, 184, 0.2);
+  }
+
+  .glossary-item__full {
+    font-size: var(--text-sm);
+    color: var(--ink-300);
+    font-style: italic;
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .glossary-item__def {
+    font-size: var(--text-sm);
+    color: var(--ink-200);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* Subtle left accent bar on hover for family items */
+  .glossary-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 3px;
+    background: transparent;
+    border-radius: var(--radius-md) 0 0 var(--radius-md);
+    transition: background var(--duration-fast) var(--ease-out-expo);
+  }
+
+  .glossary-item:hover::before {
+    background: var(--ink-400);
+  }
+
+  /* Per-family accent bar */
+  .glossary-item:has(.glossary-item__acronym--ddr):hover::before {
+    background: var(--cyan-500);
+  }
+
+  .glossary-item:has(.glossary-item__acronym--lpddr):hover::before {
+    background: var(--teal-500);
+  }
+
+  .glossary-item:has(.glossary-item__acronym--gddr):hover::before {
+    background: var(--amber-500);
+  }
+
+  .glossary-item:has(.glossary-item__acronym--hbm):hover::before {
+    background: var(--violet-500);
+  }
+
+  .glossary-item:has(.glossary-item__acronym--module):hover::before {
+    background: var(--ink-200);
+  }
+</style>

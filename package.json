@@ -1,0 +1,38 @@
+{
+  "name": "ram-cheatsheet",
+  "version": "1.0.0",
+  "description": "An authoritative, citation-backed taxonomy of DRAM standards and module form factors — static Astro infographic site.",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/artalar/ram-cheatsheet.git"
+  },
+  "keywords": [
+    "ram",
+    "dram",
+    "ddr",
+    "lpddr",
+    "gddr",
+    "hbm",
+    "infographic",
+    "astro"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/artalar/ram-cheatsheet/issues"
+  },
+  "homepage": "https://github.com/artalar/ram-cheatsheet#readme",
+  "dependencies": {
+    "astro": "^6.1.10"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.3"
+  }
+}

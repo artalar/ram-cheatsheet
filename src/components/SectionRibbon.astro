@@ -1,0 +1,48 @@
+---
+/**
+ * SectionRibbon — a horizontal section label with a left accent stripe
+ * color-coded by DRAM family.
+ *
+ * Usage:
+ *   <SectionRibbon family="ddr" label="DDR SDRAM" />
+ *   <SectionRibbon family="gddr">Graphics Memory</SectionRibbon>
+ */
+
+type RibbonFamily = 'ddr' | 'lpddr' | 'gddr' | 'hbm' | 'modules' | 'none';
+
+interface Props {
+  /** DRAM family — determines accent color */
+  readonly family?: RibbonFamily;
+  /** Label text (alternative to slot content) */
+  readonly label?: string;
+  /** HTML heading level for the ribbon, default 2 */
+  readonly headingLevel?: 2 | 3 | 4 | 5 | 6;
+}
+
+const {
+  family = 'none',
+  label,
+  headingLevel = 2,
+} = Astro.props;
+
+const Tag = `h${headingLevel}` as const;
+
+const familyClass = family !== 'none' ? `section-ribbon--${family}` : '';
+---
+
+<div class:list={['section-ribbon', familyClass]}>
+  <Tag class="section-ribbon__text">
+    {label ?? <slot />}
+  </Tag>
+</div>
+
+<style>
+  .section-ribbon__text {
+    font-size: inherit;
+    font-weight: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    color: inherit;
+    line-height: 1;
+  }
+</style>

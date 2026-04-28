@@ -1,0 +1,397 @@
+---
+import type { DramFamily, Packaging } from "../content/ram-types";
+import {
+    dramStandards,
+    moduleStandards,
+    allFamilies,
+    allPackagingTypes,
+    packagingLabels,
+    familyAccentMap,
+} from "../content/ram-types";
+
+/**
+ * ComparisonMatrix — a printed-legend style matrix showing which DRAM families
+ * use which packaging types. Filtered-off cells are dimmed (not removed)
+ * so the grid stays visually stable like a printed reference poster.
+ */
+
+const familyLabels: Record<DramFamily, string> = {
+    ddr: "DDR SDRAM",
+    lpddr: "LPDDR",
+    gddr: "GDDR",
+    hbm: "HBM",
+};
+
+const familyOrder: DramFamily[] = ["ddr", "lpddr", "gddr", "hbm"];
+
+// Build a lookup: which packaging types each family uses
+const familyPackagingMap = new Map<DramFamily, Set<Packaging>>();
+for (const family of familyOrder) {
+    const packSet = new Set<Packaging>();
+    const standards = dramStandards.filter((s) => s.family === family);
+    for (const std of standards) {
+        for (const pkg of std.packaging) {
+            packSet.add(pkg);
+        }
+    }
+    familyPackagingMap.set(family, packSet);
+}
+
+// Column headers: only packaging types that actually appear
+const activePackagingTypes = allPackagingTypes.filter((pkg) => {
+    for (const family of familyOrder) {
+        if (familyPackagingMap.get(family)?.has(pkg)) return true;
+    }
+    return false;
+});
+
+// Accent color map for cell indicators
+const accentColors: Record<DramFamily, string> = {
+    ddr: "var(--cyan-500)",
+    lpddr: "var(--teal-500)",
+    gddr: "var(--amber-500)",
+    hbm: "var(--violet-500)",
+};
+
+// Pre-compute module family info (avoids const declarations inside template map)
+interface ModuleAccentInfo {
+    readonly mod: (typeof moduleStandards)[number];
+    readonly primaryFamily: DramFamily;
+}
+
+const moduleAccentInfo: readonly ModuleAccentInfo[] = moduleStandards.map(
+    (mod) => {
+        const compatibleFamilies = new Set<DramFamily>();
+        for (const stdId of mod.compatibleStandards) {
+            const std = dramStandards.find((s) => s.id === stdId);
+            if (std) compatibleFamilies.add(std.family);
+        }
+        const primaryFamily =
+            [...compatibleFamilies][0] ?? ("ddr" as DramFamily);
+        return { mod, primaryFamily };
+    },
+);
+---
+
+<section
+    class="comparison-matrix"
+    role="region"
+    aria-label="DRAM family vs packaging type comparison matrix"
+>
+    <div class="matrix-scroll-wrapper">
+        <table class="matrix-table" role="grid">
+            <caption class="sr-only">
+                Matrix showing which DRAM families (rows) use which packaging
+                types (columns). Active cells are bright; inactive cells are
+                dimmed.
+            </caption>
+            <thead>
+                <tr>
+                    <th scope="col" class="matrix-corner">Family</th>
+                    {
+                        activePackagingTypes.map((pkg) => (
+                            <th scope="col">
+                                <span class="matrix-col-header">
+                                    {packagingLabels[pkg]}
+                                </span>
+                            </th>
+                        ))
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                {
+                    familyOrder.map((family) => {
+                        const packSet = familyPackagingMap.get(family)!;
+                        return (
+                            <tr>
+                                <th scope="row">
+                                    <span
+                                        class:list={[
+                                            "matrix-row-label",
+                                            `matrix-row-label--${family}`,
+                                        ]}
+                                    >
+                                        {familyLabels[family]}
+                                    </span>
+                                </th>
+                                {activePackagingTypes.map((pkg) => {
+                                    const isActive = packSet.has(pkg);
+                                    return (
+                                        <td
+                                            class:list={[
+                                                "matrix-cell",
+                                                isActive
+                                                    ? "matrix-cell--active"
+                                                    : "matrix-cell--dim",
+                                                `matrix-cell--${family}`,
+                                            ]}
+                                            role="gridcell"
+                                            aria-label={`${familyLabels[family]} ${isActive ? "uses" : "does not use"} ${packagingLabels[pkg]}`}
+                                        >
+                                            {isActive ? (
+                                                <span
+                                                    class="matrix-indicator"
+                                                    aria-hidden="true"
+                                                >
+                                                    <svg
+                                                        viewBox="0 0 16 16"
+                                                        width="16"
+                                                        height="16"
+                                                        fill="none"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                        <rect
+                                                            x="2"
+                                                            y="2"
+                                                            width="12"
+                                                            height="12"
+                                                            rx="3"
+                                                            fill={
+                                                                accentColors[
+                                                                    family
+                                                                ]
+                                                            }
+                                                            opacity="0.25"
+                                                        />
+                                                        <rect
+                                                            x="4"
+                                                            y="4"
+                                                            width="8"
+                                                            height="8"
+                                                            rx="2"
+                                                            fill={
+                                                                accentColors[
+                                                                    family
+                                                                ]
+                                                            }
+                                                        />
+                                                    </svg>
+                                                </span>
+                                            ) : (
+                                                <span
+                                                    class="matrix-dim-dot"
+                                                    aria-hidden="true"
+                                                >
+                                                    —
+                                                </span>
+                                            )}
+                                        </td>
+                                    );
+                                })}
+                            </tr>
+                        );
+                    })
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Module type sub-table -->
+    <div class="matrix-modules-section">
+        <h4 class="matrix-modules-title">Module Electrical Roles</h4>
+        <div class="matrix-modules-grid">
+            {
+                moduleAccentInfo.map(({ mod, primaryFamily }) => (
+                    <div
+                        class:list={[
+                            "module-entry panel",
+                            `module-entry--${primaryFamily}`,
+                        ]}
+                    >
+                        <div
+                            class={`color-stripe color-stripe--${primaryFamily}`}
+                        />
+                        <div class="module-entry__content">
+                            <span
+                                class:list={[
+                                    "module-entry__acronym acronym",
+                                    `module-entry__acronym--${primaryFamily}`,
+                                ]}
+                            >
+                                {mod.acronym}
+                            </span>
+                            <span class="module-entry__name">
+                                {mod.fullName}
+                            </span>
+                            <span class="module-entry__role">{mod.role}</span>
+                            <div class="module-entry__meta">
+                                <span class="chip">
+                                    {mod.moduleRole.replace(/-/g, " ")}
+                                </span>
+                                <span class="chip">{mod.formFactor}</span>
+                            </div>
+                        </div>
+                    </div>
+                ))
+            }
+        </div>
+    </div>
+</section>
+
+<style>
+    /* ─── Scroll wrapper for narrow screens ─── */
+    .matrix-scroll-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--surface-stroke);
+        background: var(--surface);
+    }
+
+    /* ─── Corner cell ─── */
+    .matrix-corner {
+        background: var(--ink-800) !important;
+        color: var(--ink-100);
+        font-size: var(--text-xs);
+    }
+
+    /* ─── Column headers ─── */
+    .matrix-col-header {
+        display: block;
+        max-width: 110px;
+        word-wrap: break-word;
+        hyphens: auto;
+    }
+
+    /* ─── Row labels ─── */
+    .matrix-row-label {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-2);
+        font-family: var(--font-mono);
+        font-weight: 700;
+        font-size: var(--text-sm);
+        letter-spacing: 0.04em;
+        white-space: nowrap;
+    }
+
+    .matrix-row-label::before {
+        content: "";
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 2px;
+    }
+
+    .matrix-row-label--ddr::before {
+        background: var(--cyan-500);
+    }
+    .matrix-row-label--lpddr::before {
+        background: var(--teal-500);
+    }
+    .matrix-row-label--gddr::before {
+        background: var(--amber-500);
+    }
+    .matrix-row-label--hbm::before {
+        background: var(--violet-500);
+    }
+
+    /* ─── Cells ─── */
+    .matrix-cell {
+        text-align: center;
+        vertical-align: middle;
+        transition: opacity var(--duration-fast) var(--ease-out-expo);
+    }
+
+    .matrix-cell--active {
+        opacity: 1;
+    }
+
+    .matrix-cell--dim {
+        opacity: 0.15;
+    }
+
+    .matrix-indicator {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .matrix-dim-dot {
+        color: var(--ink-400);
+        font-size: var(--text-lg);
+        line-height: 1;
+    }
+
+    /* ─── Module section below matrix ─── */
+    .matrix-modules-section {
+        margin-block-start: var(--space-10);
+    }
+
+    .matrix-modules-title {
+        font-size: var(--text-lg);
+        color: var(--ink-100);
+        margin-block-end: var(--space-4);
+        letter-spacing: 0.02em;
+    }
+
+    .matrix-modules-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+        gap: var(--space-4);
+    }
+
+    /* ─── Module entry card ─── */
+    .module-entry {
+        position: relative;
+        padding-left: var(--space-8);
+        overflow: hidden;
+    }
+
+    .module-entry__content {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-2);
+    }
+
+    .module-entry__acronym {
+        font-size: var(--text-base);
+    }
+
+    .module-entry__acronym--ddr {
+        color: var(--cyan-300);
+    }
+    .module-entry__acronym--lpddr {
+        color: var(--teal-300);
+    }
+    .module-entry__acronym--gddr {
+        color: var(--amber-300);
+    }
+    .module-entry__acronym--hbm {
+        color: var(--violet-300);
+    }
+
+    .module-entry__name {
+        font-size: var(--text-sm);
+        color: var(--ink-200);
+    }
+
+    .module-entry__role {
+        font-size: var(--text-sm);
+        color: var(--ink-100);
+        line-height: 1.5;
+    }
+
+    .module-entry__meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-2);
+        margin-block-start: var(--space-1);
+    }
+
+    /* ─── Responsive: sticky first column on wide tables ─── */
+    @media (max-width: 768px) {
+        .matrix-table th:first-child,
+        .matrix-table td:first-child {
+            position: sticky;
+            left: 0;
+            z-index: 1;
+            background: var(--ink-700);
+        }
+
+        .matrix-table td:first-child {
+            background: var(--ink-800);
+        }
+    }
+</style>

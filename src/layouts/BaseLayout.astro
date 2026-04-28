@@ -1,0 +1,188 @@
+---
+import "../styles/global.css";
+
+interface Props {
+    readonly title: string;
+    readonly description?: string;
+}
+
+const {
+    title,
+    description = "An authoritative, citation-backed taxonomy of DRAM standards and module form factors.",
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="description" content={description} />
+        <meta name="color-scheme" content="dark" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <title>{title}</title>
+    </head>
+    <body>
+        <a href="#main-content" class="skip-link">Skip to main content</a>
+
+        <div class="site-shell">
+            <header class="site-header container">
+                <nav class="site-nav" aria-label="Site navigation">
+                    <a
+                        href="/"
+                        class="site-nav__logo"
+                        aria-label="RAM Cheatsheet home"
+                    >
+                        RAM<span style="color: var(--cyan-500);">↗</span>
+                    </a>
+                    <ul class="site-nav__links" role="list">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/explore">Explore</a></li>
+                        <li><a href="/#glossary">Glossary</a></li>
+                        <li><a href="/#sources">Sources</a></li>
+                    </ul>
+                </nav>
+            </header>
+
+            <main id="main-content">
+                <slot />
+            </main>
+
+            <footer class="sources-footer container" id="sources">
+                <h3>Sources &amp; Standards</h3>
+                <ul>
+                    <li>
+                        <a
+                            href="https://www.jedec.org/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            >JEDEC — Global Standards for the Microelectronics
+                            Industry</a>
+                    </li>
+                    <li>
+                        <a
+                            href="https://www.jedec.org/standards-documents/docs/jesd79-5"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            >JESD79-5 — DDR5 SDRAM Standard</a>
+                    </li>
+                    <li>
+                        <a
+                            href="https://www.jedec.org/standards-documents/docs/jesd250"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            >JESD250 — GDDR6 SGRAM Standard</a>
+                    </li>
+                    <li>
+                        <a
+                            href="https://www.jedec.org/standards-documents/docs/jesd235"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            >JESD235 — HBM2 / HBM2e Standard</a>
+                    </li>
+                    <li>
+                        <a
+                            href="https://www.jedec.org/standards-documents/docs/jesd209-5"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            >JESD209-5 — LPDDR5 / LPDDR5X Standard</a>
+                    </li>
+                    <li>
+                        <a
+                            href="https://www.jedec.org/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            >JESD323 — CUDIMM / CSODIMM (Clocked Unbuffered
+                            Modules)</a>
+                    </li>
+                </ul>
+                <p
+                    style="margin-top: var(--space-4); font-size: var(--text-xs); color: var(--ink-300);"
+                >
+                    This site teaches definitions, roles, and standards — not
+                    benchmark comparisons. All factual claims are derived from
+                    JEDEC specifications and vendor-published documentation. No
+                    speculative or forward-looking technology claims are made.
+                </p>
+            </footer>
+        </div>
+
+        <script>
+            function initScrollReveal() {
+                var prefersReducedMotion = window.matchMedia(
+                    "(prefers-reduced-motion: reduce)",
+                ).matches;
+                if (prefersReducedMotion) {
+                    document.querySelectorAll(".reveal").forEach(function (el) {
+                        el.classList.add("revealed");
+                    });
+                    return;
+                }
+
+                var observer = new IntersectionObserver(
+                    function (entries) {
+                        for (var i = 0; i < entries.length; i++) {
+                            if (entries[i].isIntersecting) {
+                                entries[i].target.classList.add("revealed");
+                                observer.unobserve(entries[i].target);
+                            }
+                        }
+                    },
+                    {
+                        threshold: 0.1,
+                        rootMargin: "0px 0px -40px 0px",
+                    },
+                );
+
+                document.querySelectorAll(".reveal").forEach(function (el) {
+                    observer.observe(el);
+                });
+            }
+
+            initScrollReveal();
+
+            document.addEventListener("astro:page-load", function () {
+                initScrollReveal();
+            });
+        </script>
+    </body>
+</html>
+
+<style>
+    .site-shell {
+        display: flex;
+        flex-direction: column;
+        min-height: 100dvh;
+        position: relative;
+        z-index: 1;
+    }
+
+    .site-shell > main {
+        flex: 1;
+    }
+
+    .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: rgba(10, 14, 26, 0.85);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-bottom: 1px solid var(--surface-stroke);
+    }
+
+    @media (max-width: 640px) {
+        .site-nav {
+            flex-wrap: wrap;
+            gap: var(--space-3);
+        }
+
+        .site-nav__links {
+            gap: var(--space-3);
+        }
+
+        .site-nav__links a {
+            font-size: var(--text-xs);
+        }
+    }
+</style>
