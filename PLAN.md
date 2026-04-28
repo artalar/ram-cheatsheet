@@ -4,19 +4,19 @@ overview: Define an authoritative, citation-backed taxonomy of DRAM standards an
 todos:
   - id: facts-source-pass
     content: "Authoritative content spec: JEDEC/industry definitions + vendor-cited examples only; explicit out-of-scope list"
-    status: pending
+    status: done
   - id: astro-scaffold
     content: Initialize Astro (Node 22+), TS strict, static output, global tokens + layout
-    status: pending
+    status: done
   - id: data-driven-ui
     content: Implement typed RAM/module entities + Explore filters + infographic components (SVG/CSS)
-    status: pending
+    status: done
   - id: pages-polish
     content: "Poster-style visuals: hero mural, ink/accent system, glossary, sources footer, accessibility and reduced-motion"
-    status: pending
+    status: done
   - id: git-pr
     content: Branch cursor/ram-infographic-astro-e8f7, commit, push, draft PR to main
-    status: pending
+    status: done
 isProject: false
 ---
 
